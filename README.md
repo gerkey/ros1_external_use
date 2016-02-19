@@ -2,7 +2,7 @@
 
 ## Build and install
 ~~~
-sudo apt-get install ros-indigo-sensor-msgs ros-indigo-geometry-msgs ros-indigo-map-msgs
+sudo apt-get install ros-indigo-catkin ros-indigo-sensor-msgs ros-indigo-geometry-msgs ros-indigo-map-msgs
 cd ros1_msg_reuse
 # Set up some environment variables. If you don't want such fine-grained
 # control, you could instead do `. /opt/ros/indigo/setup.sh`
