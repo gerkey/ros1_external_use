@@ -28,3 +28,5 @@ add_dependencies(use_custom_msg ${PROJECT_NAME}_generate_messages)
 # automatically be installed.
 install(TARGETS use_existing_msg use_custom_msg
         DESTINATION bin)
+install(PROGRAMS use_msgs.py
+        DESTINATION bin)
