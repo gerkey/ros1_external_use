@@ -18,8 +18,8 @@ make install
 ## Run
 ~~~
 export PYTHONPATH=/tmp/myproject/lib/python2.7/site-packages:/opt/ros/indigo/lib/python2.7/site-packages:$PYTHONPATH
-/tmp/myproject/bin/foo
-/tmp/myproject/bin/bar
-python /tmp/myproject/bin/use_msgs.py
+/tmp/myproject/bin/use_existing_msg
+/tmp/myproject/bin/use_custom_msg
+/tmp/myproject/bin/use_msgs.py
 ~~~
 
