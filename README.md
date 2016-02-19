@@ -4,6 +4,7 @@
 ~~~
 # Install the minimal prerequisites: catkin plus any message packages that you need
 sudo apt-get install ros-indigo-catkin ros-indigo-sensor-msgs ros-indigo-geometry-msgs ros-indigo-map-msgs
+git clone https://github.com/gerkey/ros1_msg_reuse
 cd ros1_msg_reuse
 # Set up some environment variables. If you don't want such fine-grained
 # control, you could instead do `. /opt/ros/indigo/setup.sh`
