@@ -1,4 +1,4 @@
-# Ubuntu Linux
+# Ubuntu Linux (using binary ROS packages)
 
 ## Build and install
 ~~~
@@ -23,3 +23,8 @@ export PYTHONPATH=/tmp/myproject/lib/python2.7/dist-packages:/opt/ros/indigo/lib
 /tmp/myproject/bin/use_msgs.py
 ~~~
 
+# Ubuntu Linux (from source)
+TODO
+
+# Mac OSX (from source)
+TODO
