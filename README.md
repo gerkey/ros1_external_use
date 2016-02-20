@@ -13,6 +13,7 @@ Some caveats:
 * we're just working with messages, not libraries;
 * we're not fully using the message structures (e.g., you can't call ros::Time::now() to get the current time);
 * we're not using any run-time tools (rostopic, rosmsg, etc.)
+
 These topics can all be explored further, to see what the constraints are.
 
 # Ubuntu Linux (using binary ROS packages)
