@@ -16,7 +16,7 @@ ROS packages all provide CMake configuration files that allow you to
 software.
 
 ROS packages also provide `pkg-config` files, which opens the door to doing
-everything shown below directly with make, not CMake; [see below](#make)
+everything shown below directly with make, not CMake; [see below](#using-plain-make-ubuntu-linux-or-osx)
 for that.
 
 Some caveats:
