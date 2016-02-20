@@ -5,9 +5,11 @@ structures in C++ and Python via CMake and make. The goal is to show that,
 while ROS itself is **developed** using catkin, package.xml meta-data
 files, and other tools that help with managing a workspace drawn from
 multiple repositories, you don't have to use those tools when developing
-your software that **uses** ROS. It should be easy to use ROS just as you
+your software that **uses** ROS.
+
+It should be easy to use ROS just as you
 would any other software dependency, without giving consideration to the
-tools that are used internal to the development of ROS (though you might also find those tools useful for your own projects).
+tools that are used internal to the development of ROS (though you might also find those tools useful for your own projects). We can do this because (thanks to catkin) ROS packages all provide CMake configuration files that allow you to `find_package()` and use them in your own CMake build just like most modern software. ROS packages also provide `pkg-config` files, which opens the door to doing everything shown below directly with make, not CMake. We'll get to that example when time allows.
 
 Some caveats:
 * we're just working with messages, not libraries;
