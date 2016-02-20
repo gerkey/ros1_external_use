@@ -35,7 +35,7 @@ Installing on Ubuntu is easy because we have pre-packaged binaries.
 ~~~
 # Install the minimal prerequisites: catkin plus any message packages that
 # you need.  We have to explicitly install the catkin package here because
-# the sensor packages don't require it but we will need to get the macros
+# the message packages don't require it but we will need it to get the macros
 # for doing code generation on our custom messages.
 sudo apt-get install ros-indigo-catkin ros-indigo-sensor-msgs ros-indigo-geometry-msgs ros-indigo-map-msgs
 ~~~
