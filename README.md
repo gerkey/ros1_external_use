@@ -1,14 +1,35 @@
+This repository demonstrates how to use pre-existing and custom ROS message
+structures in C++ and Python via CMake and make. The goal is to show that,
+while ROS itself is **developed** using catkin, package.xml meta-data
+files, and other tools that help with managing a workspace drawn from
+multiple repositories, you don't have to use those tools when developing
+your software that **uses** ROS. It should be easy to use ROS just as you
+would any other software dependency, without giving consideration to the
+tools that are used internal to the development of ROS.
+
+Some caveats:
+* we're just working with messages, not libraries;
+* we're not fully using the message structures (e.g., you can't call ros::Time::now() to get the current time);
+* we're not using any run-time tools (rostopic, rosmsg, etc.)
+
 # Ubuntu Linux (using binary ROS packages)
 
 ## Build and install
 
-### Install prerequisites
+### Install ROS message packages
+Installing Ubuntu is easy because we have pre-packaged binaries.
 ~~~
-# Install the minimal prerequisites: catkin plus any message packages that you need
+# Install the minimal prerequisites: catkin plus any message packages that
+# you need.  We have to explicitly install the catkin package here because
+# the sensor packages don't require it but we will need to get the macros
+# for doing code generation on our custom messages.
 sudo apt-get install ros-indigo-catkin ros-indigo-sensor-msgs ros-indigo-geometry-msgs ros-indigo-map-msgs
 ~~~
 
 ### Build the example
+Here's where it's just the normal CMake routine, plus some initial
+environment configuration to ensure that we can find the ROS packages that
+are installed in `/opt/ros/indigo`.
 ~~~
 # Get the example code
 git clone https://github.com/gerkey/ros1_msg_reuse
@@ -35,14 +56,14 @@ export PYTHONPATH=/tmp/myproject/lib/python2.7/dist-packages:/opt/ros/indigo/lib
 /tmp/myproject/bin/use_msgs.py
 ~~~
 
-# Ubuntu Linux (from source)
-TODO
-
 # Mac OSX (from source)
 
 ## Build and install
 
 ### Install prerequisites
+We need to install a few system dependencies (on Ubuntu this step is done
+automatically by the dependencies encoded in the binary packages). We get
+those dependencies from a combination of brew and pip.
 ~~~
 # <Install brew and configure your environment to include /usr/local (http://brew.sh)>
 # Update brew and add a tap that will provide some ROS-specific dependencies
@@ -55,6 +76,14 @@ sudo easy_install pip
 # pip install some stuff
 # (Note: this step avoids using rosdep to resolve system dependencies and is therefore somewhat brittle.)
 sudo -H pip install -U wstool rosinstall rosinstall_generator rospkg catkin-pkg Distribute PyYAML empy argparse
+~~~
+
+### Install ROS message packages
+We don't supply binary packages of ROS for OSX, so we'll need to pull the
+source and build it. We'll use `rosinstall_generator` to dynamically
+generate a custom recipe to get the source for just the packages that we
+want.
+~~~
 # Make a place to work (could be anywhere)
 mkdir ~/ros1_ws
 cd ~/ros1_ws
@@ -67,6 +96,8 @@ wstool init -j8 src ros1.repos
 ~~~
 
 ### Build the example
+Like Ubuntu, this step is normal CMake, plus some environment configuration
+to find the ROS packages installed in `~/ros1_ws`.
 ~~~
 # Get the example code
 git clone https://github.com/gerkey/ros1_msg_reuse
@@ -92,3 +123,7 @@ export PYTHONPATH=/tmp/myproject/lib/python2.7/site-packages:$HOME/ros1_ws/insta
 /tmp/myproject/bin/use_custom_msg
 /tmp/myproject/bin/use_msgs.py
 ~~~
+
+# Ubuntu Linux (from source)
+TODO
+
