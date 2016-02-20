@@ -1,23 +1,26 @@
-This repository demonstrates how to use pre-existing and custom ROS message
+# Overview
+
+This repository demonstrates how to use both pre-existing and custom ROS message
 structures in C++ and Python via CMake and make. The goal is to show that,
 while ROS itself is **developed** using catkin, package.xml meta-data
 files, and other tools that help with managing a workspace drawn from
 multiple repositories, you don't have to use those tools when developing
 your software that **uses** ROS. It should be easy to use ROS just as you
 would any other software dependency, without giving consideration to the
-tools that are used internal to the development of ROS.
+tools that are used internal to the development of ROS (though you might also find those tools useful for your own projects).
 
 Some caveats:
 * we're just working with messages, not libraries;
 * we're not fully using the message structures (e.g., you can't call ros::Time::now() to get the current time);
 * we're not using any run-time tools (rostopic, rosmsg, etc.)
+These topics can all be explored further, to see what the constraints are.
 
 # Ubuntu Linux (using binary ROS packages)
 
 ## Build and install
 
 ### Install ROS message packages
-Installing Ubuntu is easy because we have pre-packaged binaries.
+Installing on Ubuntu is easy because we have pre-packaged binaries.
 ~~~
 # Install the minimal prerequisites: catkin plus any message packages that
 # you need.  We have to explicitly install the catkin package here because
@@ -27,7 +30,7 @@ sudo apt-get install ros-indigo-catkin ros-indigo-sensor-msgs ros-indigo-geometr
 ~~~
 
 ### Build the example
-Here's where it's just the normal CMake routine, plus some initial
+Here's where it's the normal CMake routine, plus some initial
 environment configuration to ensure that we can find the ROS packages that
 are installed in `/opt/ros/indigo`.
 ~~~
@@ -80,9 +83,9 @@ sudo -H pip install -U wstool rosinstall rosinstall_generator rospkg catkin-pkg 
 
 ### Install ROS message packages
 We don't supply binary packages of ROS for OSX, so we'll need to pull the
-source and build it. We'll use `rosinstall_generator` to dynamically
+source and build it. The source lives in multiple repositories, so we'll use `rosinstall_generator` to dynamically
 generate a custom recipe to get the source for just the packages that we
-want.
+want, at the right versions.
 ~~~
 # Make a place to work (could be anywhere)
 mkdir ~/ros1_ws
