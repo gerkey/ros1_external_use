@@ -7,9 +7,17 @@ files, and other tools that help with managing a workspace drawn from
 multiple repositories, you don't have to use those tools when developing
 your software that **uses** ROS.
 
-It should be easy to use ROS just as you
-would any other software dependency, without giving consideration to the
-tools that are used internal to the development of ROS (though you might also find those tools useful for your own projects). We can do this because (thanks to catkin) ROS packages all provide CMake configuration files that allow you to `find_package()` and use them in your own CMake build just like most modern software. ROS packages also provide `pkg-config` files, which opens the door to doing everything shown below directly with make, not CMake. We'll get to that example when time allows.
+It should be easy to use ROS just as you would any other software
+dependency, without giving consideration to the tools that are used
+internal to the development of ROS (though you might also find those tools
+useful for your own projects). We can do this because (thanks to catkin)
+ROS packages all provide CMake configuration files that allow you to
+`find_package()` and use them in your own CMake build just like most modern
+software.
+
+ROS packages also provide `pkg-config` files, which opens the door to doing
+everything shown below directly with make, not CMake; [see below](#make)
+for that.
 
 Some caveats:
 * we're just working with messages, not libraries;
@@ -132,4 +140,19 @@ export PYTHONPATH=/tmp/myproject/lib/python2.7/site-packages:$HOME/ros1_ws/insta
 
 # Ubuntu Linux (from source)
 TODO
+
+# Using plain make (Ubuntu Linux or OSX)
+Because ROS packages also provide `pkg-config` files, we can run the build
+from plain make. To try it out, run through the same steps as above, but
+when you get to the `mkdir build` step, stop and do the following instead:
+
+~~~
+# Ubuntu, using binary debs
+export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig:$PKG_CONFIG_PATH
+# OSX, using local build
+#export PKG_CONFIG_PATH=$HOME/ros1_ws/install_isolated/lib/pkgconfig:$PKG_CONFIG_PATH
+make install
+~~~
+
+You should get the same result as with CMake, installed to /tmp/myproject.
 
