@@ -1,4 +1,3 @@
-CXX ?= clang
 project = myproject
 install_prefix ?= /tmp/$(project)
 
