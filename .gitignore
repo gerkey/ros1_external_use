@@ -1,6 +1,7 @@
 build
 talker
 listener
+publish_cv_cam
 ros1_msgs/myproject
 use_custom_msg
 use_existing_msg
