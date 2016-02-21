@@ -58,7 +58,7 @@ sudo rosdep init
 rosdep update
 ~~~
 
-## Get the code (all platforms)
+# Get the code (all platforms)
 
 Whatever platform you're on, you'll need to clone this repo:
 
@@ -66,7 +66,7 @@ Whatever platform you're on, you'll need to clone this repo:
 git clone https://github.com/gerkey/ros1_external_use
 ~~~
 
-## TODO
+# TODO
 
 Examples yet to be done include:
 
