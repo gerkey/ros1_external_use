@@ -5,7 +5,7 @@ pair (taken from the standard tutorial:
 http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29)
 with CMake and make. The goal is to show that using the middleware aspects
 of ROS is no different from using any other software dependency, with no
-unusual impact on develompent.
+unusual impact on development.
 
 # Ubuntu Linux
 
