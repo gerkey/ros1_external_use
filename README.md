@@ -63,7 +63,7 @@ rosdep update
 Whatever platform you're on, you'll need to clone this repo:
 
 ~~~
-git clone https://github.com/gerkey/ros1_external_reuse
+git clone https://github.com/gerkey/ros1_external_use
 ~~~
 
 ## TODO
