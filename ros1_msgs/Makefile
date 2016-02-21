@@ -38,7 +38,7 @@ $(msgs_py_init): $(msgs_py)
 
 # Build an executable that uses locally defined messages
 use_custom_msg: use_custom_msg.cpp $(msgs_cpp)
-	$(CXX) -Wall -o $@ $(geometry_msgs_includes) $(map_msgs_includes) $<
+	$(CXX) -Wall -o $@ $(geometry_msgs_includes) $(map_msgs_includes) -I. $<
 
 # Install everything
 install: all
