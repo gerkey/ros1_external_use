@@ -50,7 +50,7 @@ Run the listener:
 # you started roscore on a different machine and/or port):
 export ROS_MASTER_URI=http://localhost:11311
 # Extend your library path to find the shared objects installed in
-# ~/ros1_ws:
+# /opt/ros/indigo:
 export LD_LIBRARY_PATH=/opt/ros/indigo/lib:$LD_LIBRARY_PATH
 cd ros1_external_use/ros1_comms/build
 ./listener
@@ -63,7 +63,7 @@ Run the talker:
 # you started roscore on a different machine and/or port):
 export ROS_MASTER_URI=http://localhost:11311
 # Extend your library path to find the shared objects installed in
-# ~/ros1_ws:
+# /opt/ros/indigo:
 export LD_LIBRARY_PATH=/opt/ros/indigo/lib:$LD_LIBRARY_PATH
 cd ros1_external_use/ros1_comms/build
 ./talker
