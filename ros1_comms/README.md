@@ -35,7 +35,7 @@ make
 
 ## Run
 Terminal 1:
-Run a ROS core, which is necessary to allows ROS nodes to discover each
+Run a ROS core, which is necessary to allow ROS nodes to discover each
 other:
 ~~~
 # Load the environment configuration needed by roscore
