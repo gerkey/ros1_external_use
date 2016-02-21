@@ -4,9 +4,24 @@ There are many ways to improve this little program and make it more general, suc
 
 # Ubuntu Linux
 
+## Build
 ~~~
-sudo apt-get install ros-indigo-std-msgs ros-indigo-roslaunch ros-indigo-roscpp ros-indigo-sensor-msgs 
+sudo apt-get install ros-indigo-std-msgs ros-indigo-roslaunch ros-indigo-roscpp ros-indigo-sensor-msgs
+export CPATH=$HOME/ros1_ws/install_isolated/include:$CPATH
+export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig:$PKG_CONFIG_PATH
 cd ros1_external_use/opencv_example
 make
 ~~~
 
+## Run
+Terminal 1: ROS core
+~~~
+. /opt/ros/indigo/setup.sh
+roscore
+~~~
+
+Terminal 2: image publisher
+~~~
+export LD_LIBRARY_PATH=/opt/ros/indigo/lib:$LD_LIBRARY_PATH
+export ROS_MASTER_URI=http://localhost:11311
+~~~
