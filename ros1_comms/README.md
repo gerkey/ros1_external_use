@@ -9,6 +9,70 @@ unusual impact on develompent.
 
 # Ubuntu Linux
 
+### Install ROS message packages
+Installing on Ubuntu is easy because we have pre-packaged binaries.
+~~~
+# Install the minimal prerequisites: roscpp, roslaunch, and std_msgs.
+sudo apt-get install ros-indigo-roslaunch ros-indigo-roscpp ros-indigo-std-msgs
+~~~
+
+## Build the example
+Here's where it's the normal CMake routine, plus some initial
+environment configuration to ensure that we can find the ROS packages that
+are installed in `/opt/ros/indigo`.
+~~~
+cd ros1_external_use/ros1_comms
+# Set up some environment variables. If you don't want such fine-grained
+# control, you could instead do `. /opt/ros/indigo/setup.sh`
+export CMAKE_PREFIX_PATH=/opt/ros/indigo:$CMAKE_PREFIX_PATH
+export CPATH=/opt/ros/indigo/include:$CPATH
+# Build with cmake as usual
+mkdir build
+cd build
+cmake ..
+make
+~~~
+
+## Run
+Terminal 1:
+Run a ROS core, which is necessary to allows ROS nodes to discover each
+other:
+~~~
+# Load the environment configuration needed by roscore
+. /opt/ros/indigo/setup.sh
+roscore
+~~~
+
+Terminal 2:
+Run the listener:
+~~~
+# Set ROS_MASTER_URI to point to the roscore that you started (adjust if
+# you started roscore on a different machine and/or port):
+export ROS_MASTER_URI=http://localhost:11311
+# Extend your library path to find the shared objects installed in
+# ~/ros1_ws:
+export LD_LIBRARY_PATH=/opt/ros/indigo/lib:$LD_LIBRARY_PATH
+cd ros1_external_use/ros1_comms/build
+./listener
+~~~
+
+Terminal 3:
+Run the talker:
+~~~
+# Set ROS_MASTER_URI to point to the roscore that you started (adjust if
+# you started roscore on a different machine and/or port):
+export ROS_MASTER_URI=http://localhost:11311
+# Extend your library path to find the shared objects installed in
+# ~/ros1_ws:
+export LD_LIBRARY_PATH=/opt/ros/indigo/lib:$LD_LIBRARY_PATH
+cd ros1_external_use/ros1_comms/build
+./talker
+~~~
+
+You should see the talker printing `hello world` messages and the listener
+printing `I heard [hello world]` messages.
+
+
 # Mac OSX
 
 ## Install ROS packages
@@ -102,7 +166,7 @@ when you get to the `mkdir build` step, stop and do the following instead
 export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig:$PKG_CONFIG_PATH
 # OSX, using local build
 #export PKG_CONFIG_PATH=$HOME/ros1_ws/install_isolated/lib/pkgconfig:$PKG_CONFIG_PATH
-make install
+make
 ~~~
 
 You should get the same result as with CMake, installed to /tmp/myproject.

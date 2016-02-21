@@ -5,9 +5,7 @@ message structures in C++ and Python via CMake and make.
 
 # Ubuntu Linux (using binary ROS packages)
 
-## Build and install
-
-### Install ROS message packages
+## Install ROS packages
 Installing on Ubuntu is easy because we have pre-packaged binaries.
 ~~~
 # Install the minimal prerequisites: catkin plus any message packages that
@@ -17,7 +15,7 @@ Installing on Ubuntu is easy because we have pre-packaged binaries.
 sudo apt-get install ros-indigo-catkin ros-indigo-sensor-msgs ros-indigo-geometry-msgs ros-indigo-map-msgs
 ~~~
 
-### Build the example
+## Build the example
 Here's where it's the normal CMake routine, plus some initial
 environment configuration to ensure that we can find the ROS packages that
 are installed in `/opt/ros/indigo`.
@@ -47,9 +45,7 @@ export PYTHONPATH=/tmp/myproject/lib/python2.7/dist-packages:/opt/ros/indigo/lib
 
 # Mac OSX (from source)
 
-## Build and install
-
-### Install ROS packages
+## Install ROS packages
 We don't supply binary packages of ROS for OSX, so we'll need to pull the
 source and build it. The source lives in multiple repositories, so we'll
 use `rosinstall_generator` to dynamically generate a custom recipe to get
@@ -74,7 +70,7 @@ rosdep install --from-paths src --ignore-src --rosdistro indigo -y
 ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release
 ~~~
 
-### Build the example
+## Build the example
 Like Ubuntu, this step is normal CMake, plus some environment configuration
 to find the ROS packages installed in `~/ros1_ws`.
 ~~~
@@ -101,9 +97,6 @@ export PYTHONPATH=/tmp/myproject/lib/python2.7/site-packages:$HOME/ros1_ws/insta
 /tmp/myproject/bin/use_custom_msg
 /tmp/myproject/bin/use_msgs.py
 ~~~
-
-# Ubuntu Linux (from source)
-TODO
 
 # Using plain make (Ubuntu Linux or OSX)
 Because ROS packages also provide `pkg-config` files, we can run the build
