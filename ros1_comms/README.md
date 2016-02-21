@@ -9,7 +9,7 @@ unusual impact on develompent.
 
 # Ubuntu Linux
 
-### Install ROS message packages
+### Install ROS packages
 Installing on Ubuntu is easy because we have pre-packaged binaries.
 ~~~
 # Install the minimal prerequisites: roscpp, roslaunch, and std_msgs.
