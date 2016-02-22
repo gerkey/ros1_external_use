@@ -24,4 +24,5 @@ Terminal 2: image publisher
 ~~~
 export LD_LIBRARY_PATH=/opt/ros/indigo/lib:$LD_LIBRARY_PATH
 export ROS_MASTER_URI=http://localhost:11311
+./publish_cv_cam
 ~~~

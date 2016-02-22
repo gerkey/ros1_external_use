@@ -9,7 +9,7 @@ unusual impact on development.
 
 # Ubuntu Linux
 
-### Install ROS packages
+## Install ROS packages
 Installing on Ubuntu is easy because we have pre-packaged binaries.
 ~~~
 # Install the minimal prerequisites: roscpp, roslaunch, and std_msgs.
@@ -169,7 +169,7 @@ export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig:$PKG_CONFIG_PATH
 make
 ~~~
 
-You should get the same result as with CMake, installed to /tmp/myproject.
+You should get the same result as with CMake, installed to ros1_external_use/ros1_comms.
 
 # Notes
 
