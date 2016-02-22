@@ -18,7 +18,7 @@ ROS packages also provide `pkg-config` files, which opens the door to doing
 everything directly with make, not CMake.
 
 Each directory demonstrates a different use case. Please explore and report
-any problems that you encounter.
+any problems that you encounter. Also, if there are use cases that you'd like to see demonstrated, please open an issue.
 
 # Pre-installation on Ubuntu Linux
 
@@ -65,11 +65,3 @@ Whatever platform you're on, you'll need to clone this repo:
 ~~~
 git clone https://github.com/gerkey/ros1_external_use
 ~~~
-
-# TODO
-
-Examples yet to be done include:
-
-* using services (pre-existing and custom)
-* using actions (pre-existing and custom)
-* making run-time tools like roslaunch, rostopic, and rosmsg interact with your installed software (maybe auto-generate a `package.xml` as part of the install step)
