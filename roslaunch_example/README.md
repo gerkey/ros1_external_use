@@ -55,3 +55,30 @@ roslaunch /tmp/myproject/share/myproject/launch/talker_listener.launch
 # Or, shorthand:
 # roslaunch myproject talker_listener.launch
 ~~~
+
+# Debian GNU/Linux
+
+## Install ROS packages
+Installing on Debian is easy because ROS is included.
+~~~
+# Install the minimal prerequisites: roscpp and roslaunch
+sudo apt-get install libroscpp-dev python-roslaunch
+~~~
+
+## Build
+~~~
+cd ros1_external_use/roslaunch_example
+make install
+~~~
+
+## Run
+~~~
+# Now extend a couple of environment variables to let roslaunch find your
+# project:
+export ROS_PACKAGE_PATH=/tmp/myproject/share:$ROS_PACKAGE_PATH
+export CMAKE_PREFIX_PATH=/tmp/myproject:$CMAKE_PREFIX_PATH
+# Launch your talker / listener pair:
+roslaunch /tmp/myproject/share/myproject/launch/talker_listener.launch
+# Or, shorthand:
+# roslaunch myproject talker_listener.launch
+~~~

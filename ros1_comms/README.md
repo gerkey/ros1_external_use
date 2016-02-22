@@ -9,7 +9,7 @@ unusual impact on development.
 
 # Ubuntu Linux
 
-### Install ROS packages
+## Install ROS packages
 Installing on Ubuntu is easy because we have pre-packaged binaries.
 ~~~
 # Install the minimal prerequisites: roscpp, roslaunch, and std_msgs.
@@ -154,7 +154,53 @@ cd ros1_external_use/ros1_comms/build
 You should see the talker printing `hello world` messages and the listener
 printing `I heard [hello world]` messages.
 
-# Using plain make (Ubuntu Linux or OSX)
+# Debian GNU/Linux
+
+## Install ROS packages
+Installing on Debian is easy because ROS is included.
+~~~
+# Install the minimal prerequisites: roscpp and roslaunch (for roscore)
+sudo apt-get install libroscpp-dev python-roslaunch
+~~~
+
+## Build the example
+Here's where it's the normal CMake routine.
+~~~
+cd ros1_external_use/ros1_comms
+# Build with cmake as usual
+mkdir build
+cd build
+cmake ..
+make
+~~~
+
+## Run
+Terminal 1:
+Run a ROS core, which is necessary to allow ROS nodes to discover each
+other:
+~~~
+roscore
+~~~
+
+Terminal 2:
+Run the listener:
+~~~
+cd ros1_external_use/ros1_comms/build
+./listener
+~~~
+
+Terminal 3:
+Run the talker:
+~~~
+cd ros1_external_use/ros1_comms/build
+./talker
+~~~
+
+You should see the talker printing `hello world` messages and the listener
+printing `I heard [hello world]` messages.
+
+
+# Using plain make (Linux or OSX)
 Because ROS packages also provide `pkg-config` files, we can run the build
 from plain make. To try it out, run through the same steps as above, but
 when you get to the `mkdir build` step, stop and do the following instead
@@ -166,10 +212,11 @@ when you get to the `mkdir build` step, stop and do the following instead
 export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig:$PKG_CONFIG_PATH
 # OSX, using local build
 #export PKG_CONFIG_PATH=$HOME/ros1_ws/install_isolated/lib/pkgconfig:$PKG_CONFIG_PATH
+# on Debian GNU/Linux just do:
 make
 ~~~
 
-You should get the same result as with CMake, installed to /tmp/myproject.
+You should get the same result as with CMake, installed to ros1_external_use/ros1_comms.
 
 # Notes
 
