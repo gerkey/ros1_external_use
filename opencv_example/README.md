@@ -7,7 +7,7 @@ There are many ways to improve this little program and make it more general, suc
 ## Build
 ~~~
 sudo apt-get install ros-indigo-std-msgs ros-indigo-roslaunch ros-indigo-roscpp ros-indigo-sensor-msgs
-export CPATH=$HOME/ros1_ws/install_isolated/include:$CPATH
+export CPATH=/opt/ros/indigo/include:$CPATH
 export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig:$PKG_CONFIG_PATH
 cd ros1_external_use/opencv_example
 make
