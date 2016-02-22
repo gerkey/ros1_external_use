@@ -26,3 +26,23 @@ export LD_LIBRARY_PATH=/opt/ros/indigo/lib:$LD_LIBRARY_PATH
 export ROS_MASTER_URI=http://localhost:11311
 ./publish_cv_cam
 ~~~
+
+# Debian GNU/Linux
+
+## Build
+~~~
+sudo apt-get install libroscpp-dev libsensor-msgs-dev libopencv-dev python-roslaunch
+cd ros1_external_use/opencv_example/
+make
+~~~
+
+## Run
+Terminal 1: ROS core
+~~~
+roscore
+~~~
+
+Terminal 2: image publisher
+~~~
+./publish_cv_cam
+~~~

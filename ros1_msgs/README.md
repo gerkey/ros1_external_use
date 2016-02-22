@@ -98,7 +98,40 @@ export PYTHONPATH=/tmp/myproject/lib/python2.7/site-packages:$HOME/ros1_ws/insta
 /tmp/myproject/bin/use_msgs.py
 ~~~
 
-# Using plain make (Ubuntu Linux or OSX)
+# Debian GNU/Linux
+
+## Install ROS packages
+Installing on Debian is easy because ROS is included.
+~~~
+# Install the minimal prerequisites: catkin plus any message packages that
+# you need.  We have to explicitly install the catkin package here because
+# the message packages don't require it but we will need it to get the macros
+# for doing code generation on our custom messages.
+sudo apt-get install catkin libmap-msgs-dev python-map-msgs
+~~~
+
+## Build the example
+Here's where it's the normal CMake routine.
+~~~
+cd ros1_external_use/ros1_msgs
+# Build with cmake as usual
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/tmp/myproject ..
+make install
+~~~
+
+## Run
+~~~
+# Extend your python path to find both your own installation and the ROS installation
+export PYTHONPATH=/tmp/myproject/lib/python2.7/site-packages:$PYTHONPATH
+# Run the executables
+/tmp/myproject/bin/use_existing_msg
+/tmp/myproject/bin/use_custom_msg
+/tmp/myproject/bin/use_msgs.py
+~~~
+
+# Using plain make (Linux or OSX)
 Because ROS packages also provide `pkg-config` files, we can run the build
 from plain make. To try it out, run through the same steps as above, but
 when you get to the `mkdir build` step, stop and do the following instead
@@ -110,6 +143,7 @@ when you get to the `mkdir build` step, stop and do the following instead
 export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig:$PKG_CONFIG_PATH
 # OSX, using local build
 #export PKG_CONFIG_PATH=$HOME/ros1_ws/install_isolated/lib/pkgconfig:$PKG_CONFIG_PATH
+# On Debian GNU/Linux just do:
 make install
 ~~~
 
