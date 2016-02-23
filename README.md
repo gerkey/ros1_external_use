@@ -100,12 +100,12 @@ the following commands will get you configured for building:
         # The following line may require modification depending on your Python
         # version and your system type (`dist-packages` vs. `site-packages).
         export PYTHONPATH=<prefix>/lib/python2.7/dist-packages:$PYTHONPATH
-	# Add the shared library location. This isn't actually needed for
-	# building, but it's easier to list it here.
+        # Add the shared library location. This isn't actually needed for
+        # building, but it's easier to list it here.
         # Linux version: 
-	export LD_LIBRARY_PATH=<prefix>/lib:$LD_LIBRARY_PATH
-	# OSX version:
-	#export DYLD_LIBRARY_PATH=<prefix>/lib:$DYLD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=<prefix>/lib:$LD_LIBRARY_PATH
+        # OSX version:
+        #export DYLD_LIBRARY_PATH=<prefix>/lib:$DYLD_LIBRARY_PATH
 
 ## Environment configuration for running
 After building, you normally install your software somewhere before executing
@@ -118,7 +118,7 @@ Specifically, you need: `CMAKE_PREFIX_PATH` and `PYTHONPATH`.
 installed at `<install_prefix>`. A good start is:
 
         export CMAKE_PREFIX_PATH=<install_prefix>:$CMAKE_PREFIX_PATH
-	# Modify this line as needed for your installation choices:
+        # Modify this line as needed for your installation choices:
         export PYTHONPATH=<install_prefix>/lib/python2.7/dist-packages:$PYTHONPATH
 
 ## Building C++ programs
