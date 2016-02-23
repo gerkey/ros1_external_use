@@ -82,23 +82,201 @@ To get your environment configured, you have two choices:
 easiest way to get the environment configuration. E.g., if you are using ROS
 Indigo from the OSRF packages, then you would do `. /opt/ros/indigo/setup.sh`.
 1. Set the required variables manually. If your packages are installed to
-`<prefix>` (e.g., `/opt/ros/indigo`, or `$HOME/ros1_ws`), then the following
-commands will get you configured for building:
+`<prefix>` (e.g., `/opt/ros/indigo`, or `$HOME/ros1_ws/install_isolated`), then
+the following commands will get you configured for building:
 
+        # To find_package() things from CMake, you need your ROS installation on
+        # your CMAKE_PREFIX_PATH.
         export CMAKE_PREFIX_PATH=<prefix>:$CMAKE_PREFIX_PATH
+        # To pkg-config things from make, you need your ROS installation on
+        # your PKG_CONFIG_PATH.
+        export PKG_CONFIG_PATH=<prefix>/lib/pkgconfig:$PKG_CONFIG_PATH
+        # To find headers installed to <prefix>/include, you need to modify
+        # CPATH.
         export CPATH=<prefix>/include:$CPATH
         # The following line may require modification depending on your Python
         # version and your system type (`dist-packages` vs. `site-packages).
         export PYTHONPATH=<prefix>/lib/python2.7/dist-packages:$PYTHONPATH
 
-## Getting C++ build flags for a ROS package
+## Building C++ programs
 To build your C++ application code against ROS packages, you need to assemble
 the right flags to pass to the compiler and linker.
 
 ### CMake
-
-
-
-### CMake
+ROS packages follow the CMake configuration protocol, which means that you can
+just `find_package()` each one and then using the resulting variables that are
+defined. To build an executable that relies on package `foo`:
+`foo_INCLUDE_DIRS`, `foo_LIBRARIES`, 
+E.g., if you're going to use `roscpp`:
+~~~
+find_package(foo REQUIRED)
+include_directories(${foo_INCLUDE_DIRS})
+add_executable(myprogram myprogram.cpp)
+target_link_libraries(myprogram ${foo_LIBRARIES})
+~~~
+Notes:
+* You don't have to call `link_directories(${foo_LIBRARY_DIRS})` because ROS
+packages follow the recommended practice of returning absolute paths in
+`${foo_LIBRARIES}`.
+* Another variable of interst in `${foo_DIR}`, which points to
+`<prefix>/share/foo`; you might start there when locating package-specific
+assets.
 
 ### make
+ROS packages provide `pkg-config` files that let you get build flags from make
+(or from a shell script or the command line, or wherever). The equivalent of the
+CMake example using package `foo` looks like this in make:
+~~~
+foo_cflags = $(shell pkg-config --cflags foo)
+foo_libs = $(shell pkg-config --libs foo)
+# Work around a known issue with new linkers that don't accept -l:/path/to/lib
+foo_libs_nocolon = $(subst -l:,,$(foo_libs))
+myprogram: myprogram.cpp
+	$(CXX) -Wall -o $@ $(foo_cflags) $< $(foo_libs_nocolon)
+~~~
+Notes:
+* You can get just the include dirs by calling `pkg-config --cflags-only-I foo`.
+* You might also call `pkg-config --variable=prefix foo` if you need to get the
+directory containing the package to locate other assets.
+
+## Using pre-existing ROS messages in C++
+If you're using messages defined in an installed ROS package from your C++
+program, then you just need to follow the steps from the previous section to
+build your program with the flags provided by that package.
+
+## Using pre-existing ROS messages in Python
+Using messages defined in an installed ROS package from your Python program
+doesn't require any special configuration. As long as your `PYTHONPATH` points
+to your ROS installation, things like `from std_msgs.msg import String` will
+just work.
+
+## Doing code generation for custom messages
+If you define your own ROS messages by writing `.msg` files in your own
+application, then you'll need to run the code generator(s) to produce the code
+required to instantiate the corresponding structures in memory.
+
+### CMake
+Calling message code generators from CMake is simplified because the `gencpp`
+package provides macros to help. Let's say that you have two custom messages,
+`Foo.msg` and `Bar.msg`, and that they in turn use messages from two installed
+ROS packages `foo_msgs` and `bar_msgs`. Then you would do message generation like so:
+~~~
+# Give the project a name (good practice in general and required by the code
+# generators to decide how to namespace and where to produce their outputs).
+project(myproject)
+# This line is temporarily required because of a bug in genmsg that will be fixed soon:
+# https://github.com/ros/genmsg/pull/61
+find_package(catkin REQUIRED)
+# The genmsg package gives us the code generator macros
+find_package(genmsg REQUIRED)
+# We need to find_package() each ROS package that defines messages that our
+# message use.
+find_package(foo_msgs REQUIRED)
+find_package(bar_msgs REQUIRED)
+# Enumerate our custom message files
+add_message_files(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} FILES Foo.msg Bar.msg)
+# Do code generation, specifying which other message packages we depend on.
+generate_messages(DEPENDENCIES foo_msgs bar_msgs)
+~~~
+That's code generation all set up. Now let's build a program that uses the
+output:
+~~~
+# Build a program that uses the custom messages
+add_executable(use_custom_msg use_custom_msg.cpp)
+# Ensure that code generation happens before building use_custom_msg by
+# depending on a special target created by generate_messages().
+add_dependencies(use_custom_msg ${PROJECT_NAME}_generate_messages)
+~~~
+Notes:
+* The C++ code for `Foo.msg` will be in `devel/include/myproject/Foo.h` and will define a
+message class `myproject::Foo`. Your include directories are automatically
+modified to allow your code to `#include <myproject/Foo.h>`.
+* The Python code for `Foo.msg` will be in
+`devel/lib/python2.7/dist-packages/myproject` (or similar) and will define a
+Python class `Foo` that can be imported from the module `myproject.msg`.
+* Depending on what ROS client libraries you have installed, code generators for
+other languages might run (e.g., for LISP). We don't cover those here.
+* All the generated code is automatically registered for installation when you
+later do `make install`.
+
+### make
+Compared to CMake, it takes a bit more effort to call the message code
+generators from make, but it's definitely doable. Taking the example from above
+(`Foo.msg` and `Bar.msg` depend on messages from `foo_msgs` and `bar_msgs`),
+here's what you would do:
+~~~
+# Give the project a name (good practice in general and required by the code
+# generators to decide how to namespace and where to produce their outputs).
+project = myproject
+# Get flags for the message packages that we depend on
+foo_msgs_includes = `pkg-config --cflags-only-I foo_msgs`
+bar_msgs_includes = `pkg-config --cflags-only-I bar_msgs`
+# Enumerate our custom messages
+msgs = Foo.msg Bar.msg
+# Compute the expected outputs from the code generators
+msgs_cpp = $(foreach msg, $(msgs), $(project)/$(basename $(msg)).h)
+msgs_py = $(foreach msg, $(msgs), $(project)/msg/_$(basename $(msg)).py)
+msgs_py_init = $(project)/msg/__init__.py
+# Find C++ and Python code generators
+gencpp_dir = $(shell pkg-config --variable=prefix gencpp)
+genpy_dir = $(shell pkg-config --variable=prefix genpy)
+# Compute include directories for all message packages. This is an overinclusive
+# hack because it would be painful to recursively gather the message package
+# dependencies (though in principle it can be done by calling
+# `pkg-config --print-requires <pkg>` for each one). The goal is to end up with
+# a set of strings of the form:
+#  -Ifoo_msgs:/path/to/foo_msgs/msg -Ibar_msgs:/path/to/bar_msgs/msg
+pkg_msg_dirs = $(wildcard $(gencpp_dir)/share/*/msg)
+pkg_msg_includes = $(foreach dir, $(pkg_msg_dirs), -I$(shell basename `dirname $(dir)`):$(dir))
+# General rule for doing C++ code generation. Args:
+#  $(pkg_msg_includes) : collection of args of the form `-I:foo_msgs:/path/to/foo_msgs`
+#  -p $(project) : the "package" name; determines the namespace used in the code
+#  -o $(project) : the output directory name
+#  -e $(gencpp_dir)/share/gencpp : location of templates needed by gencpp
+$(project)/%.h: %.msg
+	$(gencpp_dir)/lib/gencpp/gen_cpp.py $(pkg_msg_includes) -p $(project) -o $(project) -e $(gencpp_dir)/share/gencpp $<
+# General rule for doing Python code generation. Args:
+#  $(pkg_msg_includes) : collection of args of the form `-I:foo_msgs:/path/to/foo_msgs`
+#  -p $(project) : the "package" name; determines the namespace used in the code
+#  -o $(project) : the output directory name
+$(project)/msg/_%.py: %.msg
+	$(gencpp_dir)/lib/genpy/genmsg_py.py $(pkg_msg_includes) -p $(project) -o $(project)/msg $<
+# Extra rule for generating the __init__.py module file
+$(msgs_py_init): $(msgs_py)
+	$(gencpp_dir)/lib/genpy/genmsg_py.py --initpy -p $(project) -o $(project)/msg
+~~~
+That's code generation all set up. Now let's build a program that uses the
+output:
+~~~
+# Build an executable that uses locally defined messages. Note that it depends
+# on the output from the C++ generator.
+use_custom_msg: use_custom_msg.cpp $(msgs_cpp)
+	$(CXX) -Wall -o $@ $(foo_msgs_includes) $(bar_msgs_includes) -I. $<
+~~~
+Further, let's show how to install our custom messages, both the raw input and
+the generated output:
+~~~
+install_prefix ?= /tmp/$(project)
+install: all
+        # As usual, the python install location might vary from platform to platform
+	mkdir -p $(install_prefix)/include/$(project) $(install_prefix)/lib/python2.7/site-packages/$(project)/msg $(install_prefix)/bin
+        # Install our executable that uses custom messages
+	cp -a use_custom_msg $(install_prefix)/bin
+        # Install the C++ generated code
+	cp -a $(msgs_cpp) $(install_prefix)/include/$(project)
+        # Install the Python generated code
+	cp -a $(msgs_py) $(msgs_py_init) $(install_prefix)/lib/python2.7/site-packages/$(project)/msg
+        # Drop an empty `__init__.py` file to make `myproject` into a Python module
+	touch $(install_prefix)/lib/python2.7/site-packages/$(project)/__init__.py
+~~~
+
+
+## Doing code generation for custom services
+**TODO: this should be very similar to code generation for messages.**
+
+## Doing code generation for custom actions
+**TODO: this should be similar to code generation for messages, but will be a
+two-step process.**
+
+## Installing for use by tools like roslaunch
+If you've 
