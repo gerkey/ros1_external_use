@@ -100,12 +100,6 @@ the following commands will get you configured for building:
         # The following line may require modification depending on your Python
         # version and your system type (`dist-packages` vs. `site-packages).
         export PYTHONPATH=<prefix>/lib/python2.7/dist-packages:$PYTHONPATH
-        # Add the shared library location. This isn't actually needed for
-        # building, but it's easier to list it here.
-        # Linux version: 
-        export LD_LIBRARY_PATH=<prefix>/lib:$LD_LIBRARY_PATH
-        # OSX version:
-        #export DYLD_LIBRARY_PATH=<prefix>/lib:$DYLD_LIBRARY_PATH
 
 ## Environment configuration for running
 After building, you normally install your software somewhere before executing
@@ -116,6 +110,18 @@ environment configuration are:
 1. Start with a subset of the build-time environment configuration.
 Specifically, you need: `CMAKE_PREFIX_PATH` and `PYTHONPATH` (again, you could
 just source the ROS setup file to get all the variables).
+1. Extend your library path to find libraries from installed ROS packages and
+set the `ROS_MASTER_URI` (again, this would be handled for you by the ROS setup
+file):
+
+        # Add the shared library location.
+        # Linux version: 
+        export LD_LIBRARY_PATH=<prefix>/lib:$LD_LIBRARY_PATH
+        # OSX version:
+        #export DYLD_LIBRARY_PATH=<prefix>/lib:$DYLD_LIBRARY_PATH
+        # We need ROS_MASTER_URI to find the roscore
+        export ROS_MASTER_URI=http://localhost:11311
+
 1. Add environment configuration for your installed software, assuming that it's
 installed at `<install_prefix>`. A good start is:
 
