@@ -112,6 +112,7 @@ After building, you normally install your software somewhere before executing
 it. This isn't always necessary, but it usually eventualy is as you start do
 more complex things, like code generation. The requirements for run-time
 environment configuration are:
+
 1. Start with a subset of the build-time environment configuration.
 Specifically, you need: `CMAKE_PREFIX_PATH` and `PYTHONPATH`.
 1. Add environment configuration for your installed software, assuming that it's
