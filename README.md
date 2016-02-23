@@ -110,9 +110,9 @@ environment configuration are:
 1. Start with a subset of the build-time environment configuration.
 Specifically, you need: `CMAKE_PREFIX_PATH` and `PYTHONPATH` (again, you could
 just source the ROS setup file to get all the variables).
-1. Extend your library path to find libraries from installed ROS packages and
-set the `ROS_MASTER_URI` (again, this would be handled for you by the ROS setup
-file):
+1. Extend your library path to find libraries from installed ROS packages, set
+the `ROS_MASTER_URI`, and set the `ROS_PACKAGE_PATH` (again, this would be
+handled for you by the ROS setup file):
 
         # Add the shared library location.
         # Linux version: 
@@ -121,6 +121,9 @@ file):
         #export DYLD_LIBRARY_PATH=<prefix>/lib:$DYLD_LIBRARY_PATH
         # We need ROS_MASTER_URI to find the roscore
         export ROS_MASTER_URI=http://localhost:11311
+        # We need ROS_PACKAGE_PATH to point to both installed ROS packages
+        # and our installation
+        export ROS_PACKAGE_PATH=<install_prefix>/share:<prefix>/share
 
 1. Add environment configuration for your installed software, assuming that it's
 installed at `<install_prefix>`. A good start is:
