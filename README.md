@@ -121,16 +121,16 @@ handled for you by the ROS setup file):
         #export DYLD_LIBRARY_PATH=<prefix>/lib:$DYLD_LIBRARY_PATH
         # We need ROS_MASTER_URI to find the roscore
         export ROS_MASTER_URI=http://localhost:11311
-        # We need ROS_PACKAGE_PATH to point to both installed ROS packages
-        # and our installation
-        export ROS_PACKAGE_PATH=<install_prefix>/share:<prefix>/share
+        # We need ROS_PACKAGE_PATH to point to the installed ROS packages
+        export ROS_PACKAGE_PATH=<prefix>/share
 
-1. Add environment configuration for your installed software, assuming that it's
-installed at `<install_prefix>`. A good start is:
+1. Extend environment configuration for your installed software, assuming that it's
+installed at `<install_prefix>`:
 
         export CMAKE_PREFIX_PATH=<install_prefix>:$CMAKE_PREFIX_PATH
         # Modify this line as needed for your installation choices:
         export PYTHONPATH=<install_prefix>/lib/python2.7/dist-packages:$PYTHONPATH
+        export ROS_PACKAGE_PATH=<install_prefix>/share:$ROS_PACKAGE_PATH
 
 ## Building C++ programs
 To build your C++ application code against ROS packages, you need to assemble
