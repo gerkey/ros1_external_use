@@ -80,7 +80,10 @@ To get your environment configured, you have two choices:
 
 1. Source the setup file that's provided with your installation. This is the
 easiest way to get the environment configuration. E.g., if you are using ROS
-Indigo from the OSRF packages, then you would do `. /opt/ros/indigo/setup.sh`.
+Indigo from the OSRF packages, then you would do:
+
+        . /opt/ros/indigo/setup.sh
+
 1. Set the required variables manually. If your packages are installed to
 `<prefix>` (e.g., `/opt/ros/indigo`, or `$HOME/ros1_ws/install_isolated`), then
 the following commands will get you configured for building:
@@ -97,6 +100,26 @@ the following commands will get you configured for building:
         # The following line may require modification depending on your Python
         # version and your system type (`dist-packages` vs. `site-packages).
         export PYTHONPATH=<prefix>/lib/python2.7/dist-packages:$PYTHONPATH
+	# Add the shared library location. This isn't actually needed for
+	# building, but it's easier to list it here.
+        # Linux version: 
+	export LD_LIBRARY_PATH=<prefix>/lib:$LD_LIBRARY_PATH
+	# OSX version:
+	#export DYLD_LIBRARY_PATH=<prefix>/lib:$DYLD_LIBRARY_PATH
+
+## Environment configuration for running
+After building, you normally install your software somewhere before executing
+it. This isn't always necessary, but it usually eventualy is as you start do
+more complex things, like code generation. The requirements for run-time
+environment configuration are:
+1. Start with a subset of the build-time environment configuration.
+Specifically, you need: `CMAKE_PREFIX_PATH` and `PYTHONPATH`.
+1. Add environment configuration for your installed software, assuming that it's
+installed at `<install_prefix>`. A good start is:
+
+        export CMAKE_PREFIX_PATH=<install_prefix>:$CMAKE_PREFIX_PATH
+	# Modify this line as needed for your installation choices:
+        export PYTHONPATH=<install_prefix>/lib/python2.7/dist-packages:$PYTHONPATH
 
 ## Building C++ programs
 To build your C++ application code against ROS packages, you need to assemble
@@ -154,6 +177,11 @@ just work.
 If you define your own ROS messages by writing `.msg` files in your own
 application, then you'll need to run the code generator(s) to produce the code
 required to instantiate the corresponding structures in memory.
+
+Notes:
+* If you're using custom messages in Python, you should always `make install`
+and get your runtime environment configuration set up before trying to run any
+programs. Otherwise, you won't be able to import your generated Python classes.
 
 ### CMake
 Calling message code generators from CMake is simplified because the `gencpp`
@@ -258,18 +286,17 @@ the generated output:
 ~~~
 install_prefix ?= /tmp/$(project)
 install: all
-        # As usual, the python install location might vary from platform to platform
+	# As usual, the python install location might vary from platform to platform
 	mkdir -p $(install_prefix)/include/$(project) $(install_prefix)/lib/python2.7/site-packages/$(project)/msg $(install_prefix)/bin
-        # Install our executable that uses custom messages
+	# Install our executable that uses custom messages
 	cp -a use_custom_msg $(install_prefix)/bin
-        # Install the C++ generated code
+	# Install the C++ generated code
 	cp -a $(msgs_cpp) $(install_prefix)/include/$(project)
-        # Install the Python generated code
+	# Install the Python generated code
 	cp -a $(msgs_py) $(msgs_py_init) $(install_prefix)/lib/python2.7/site-packages/$(project)/msg
-        # Drop an empty `__init__.py` file to make `myproject` into a Python module
+	# Drop an empty `__init__.py` file to make `myproject` into a Python module
 	touch $(install_prefix)/lib/python2.7/site-packages/$(project)/__init__.py
 ~~~
-
 
 ## Doing code generation for custom services
 **TODO: this should be very similar to code generation for messages.**
@@ -279,4 +306,57 @@ install: all
 two-step process.**
 
 ## Installing for use by tools like roslaunch
-If you've 
+If you've ever used ROS, you know how useful tools like `roslaunch`, `rosmsg`,
+and `rostopic` are (maybe also `rosrun`, if you like to invoke package-specific
+executables). These tools share a requirement, which is the ability to locate
+package-specific assets at run time. To use them with your own software, you
+need to make your code look a little like a ROS package. This is easy to do
+during installation.
+
+For example, let's say that you build two nodes, `talker`, and `listener`, and
+you have a launch file, `talker_listener.launch` that refers to them like so:
+~~~
+<launch>
+  <node pkg="myproject" type="talker" name="talker" output="screen"/>
+  <node pkg="myproject" type="listener" name="listener" output="screen"/>
+</launch>
+~~~
+What's required to run that launch file, so that `roslaunch` can find your
+programs? We need to do a couple of things:
+1. Have a simple `package.xml` file in `<install_prefix>/share/myproject`.
+1. Create an empty marker file `<install_prefix>/.catkin`. If `<install_prefix>`
+is included in the `CMAKE_PREFIX_PATH`, then this marker file will cause
+`roslaunch` and friends to look in there for package-specific executables.
+1. Install the executables to `<install_prefix>/lib/myproject`. That's where
+`roslaunch` will look.
+
+### make
+Here's what the install rule could look like:
+~~~
+# Assume that you have earlier rules that will build the talker and listener
+# executables
+install: talker listener
+	# Install the executables to <prefix>/lib/<project>, so that
+	# they can be found by rosrun/roslaunch.
+	mkdir -p $(install_prefix)/lib/$(project)
+	cp -a talker listener $(install_prefix)/lib/$(project)
+	# Install the .launch file; this could go anywhere, but `launch` is a
+	# good pattern to follow.
+	mkdir -p $(install_prefix)/share/$(project)/launch
+	cp -a talker_listener.launch $(install_prefix)/share/$(project)/launch
+	# Create a simple package.xml, which is necessary to be treated as
+	# a ROS package.
+	echo "<package><name>$(project)</name></package>" > $(install_prefix)/share/$(project)/package.xml
+	# Create an empty .catkin marker file, which causes
+	# rosrun/roslaunch to look in <prefix>/lib/project for executables
+	# for each <prefix> in CMAKE_PREFIX_PATH
+	touch $(install_prefix)/.catkin
+~~~
+Then, after you `make install`, if you have the run-time environment
+configuration set up properly, you should be able to do:
+
+    roslaunch myproject talker_listener.launch
+
+Or, equivalently:
+
+    roslaunch <install_prefix>/share/myproject/launch/talker_listener.launch
