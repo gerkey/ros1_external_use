@@ -65,3 +65,41 @@ Whatever platform you're on, you'll need to clone this repo:
 ~~~
 git clone https://github.com/gerkey/ros1_external_use
 ~~~
+
+# Preliminary documentation
+
+Here we begin to document in a definitive manner the tools and techniques that
+are being demonstrated in the examples.
+
+## Build system choices
+
+We recommend using either CMake or make. But you should be able to port from
+make to pretty much any other build system.
+
+## Environment configuration for building
+
+If your ROS packages are installed to a system standard location, such as `/usr`
+(this is where the new upstream Debian packages get installed), then you
+probably don't need any special configuration. However, if your packages are
+installed to somewhere like `/opt/ros` (using the Ubuntu packages from OSRF) or
+in your home directory (if you built from source), then you'll need to modify
+some environment variables to allow all the various CMake, C++, and Python
+assets to be located.
+
+To get your environment configured, you have two choices:
+
+1. Source the setup file that's provided with your installation. This is the
+easiest way to get the environment configuration. E.g., if you are using ROS
+Indigo from the OSRF packages, then you would do `. /opt/ros/indigo/setup.sh`.
+1. Set the required variables manually. If your packages are installed to
+`<prefix>`, then the following commands will get you configured for building:
+
+        export
+
+## Getting build flags for a ROS package
+
+As with any set of 
+
+### CMake
+
+### make
