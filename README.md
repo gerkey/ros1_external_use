@@ -114,7 +114,8 @@ more complex things, like code generation. The requirements for run-time
 environment configuration are:
 
 1. Start with a subset of the build-time environment configuration.
-Specifically, you need: `CMAKE_PREFIX_PATH` and `PYTHONPATH`.
+Specifically, you need: `CMAKE_PREFIX_PATH` and `PYTHONPATH` (again, you could
+just source the ROS setup file to get all the variables).
 1. Add environment configuration for your installed software, assuming that it's
 installed at `<install_prefix>`. A good start is:
 
