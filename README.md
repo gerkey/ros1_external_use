@@ -197,7 +197,7 @@ and get your runtime environment configuration set up before trying to run any
 programs. Otherwise, you won't be able to import your generated Python classes.
 
 ### CMake
-Calling message code generators from CMake is simplified because the `gencpp`
+Calling message code generators from CMake is simplified because the `genmsg`
 package provides macros to help. Let's say that you have two custom messages,
 `Foo.msg` and `Bar.msg`, and that they in turn use messages from two installed
 ROS packages `foo_msgs` and `bar_msgs`. Then you would do message generation like so:
