@@ -324,7 +324,8 @@ you have a launch file, `talker_listener.launch` that refers to them like so:
 </launch>
 ~~~
 What's required to run that launch file, so that `roslaunch` can find your
-programs? We need to do a couple of things:
+programs? We need to do a few things:
+
 1. Have a simple `package.xml` file in `<install_prefix>/share/myproject`.
 1. Create an empty marker file `<install_prefix>/.catkin`. If `<install_prefix>`
 is included in the `CMAKE_PREFIX_PATH`, then this marker file will cause
