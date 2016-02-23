@@ -1,5 +1,4 @@
 # Overview
-
 This repository demonstrates how to use ROS software in C++ and Python via
 CMake and make. The goal is to show that, while ROS itself is **developed**
 using catkin, package.xml meta-data files, and other tools that help with
@@ -21,11 +20,9 @@ Each directory demonstrates a different use case. Please explore and report
 any problems that you encounter. Also, if there are use cases that you'd like to see demonstrated, please open an issue.
 
 # Pre-installation on Ubuntu Linux
-
 On Ubuntu, we provide binary packages for ROS software. To configure your
 system to use them, you need to add our repository and key to your system,
 like so (assuming that you're using ROS Indigo on Ubuntu trusty):
-
 ~~~
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 sudo apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-key 0xB01FA116
@@ -36,11 +33,9 @@ Now you're ready to `sudo apt-get install` ROS packages as indicated in the
 detailed instructions in each example in this repository.
 
 # Pre-installation on Mac OSX
-
 We need to install a few system dependencies (on Ubuntu this step is done
 automatically by the dependencies encoded in the binary packages). We get
 those dependencies from a combination of brew and pip:
-
 ~~~
 # <Install brew and configure your environment to include /usr/local (http://brew.sh)>
 # Update brew and add a tap that will provide some ROS-specific dependencies
@@ -59,25 +54,20 @@ rosdep update
 ~~~
 
 # Get the code (all platforms)
-
 Whatever platform you're on, you'll need to clone this repo:
-
 ~~~
 git clone https://github.com/gerkey/ros1_external_use
 ~~~
 
 # Preliminary documentation
-
 Here we begin to document in a definitive manner the tools and techniques that
 are being demonstrated in the examples.
 
 ## Build system choices
-
 We recommend using either CMake or make. But you should be able to port from
 make to pretty much any other build system.
 
 ## Environment configuration for building
-
 If your ROS packages are installed to a system standard location, such as `/usr`
 (this is where the new upstream Debian packages get installed), then you
 probably don't need any special configuration. However, if your packages are
@@ -92,13 +82,22 @@ To get your environment configured, you have two choices:
 easiest way to get the environment configuration. E.g., if you are using ROS
 Indigo from the OSRF packages, then you would do `. /opt/ros/indigo/setup.sh`.
 1. Set the required variables manually. If your packages are installed to
-`<prefix>`, then the following commands will get you configured for building:
+`<prefix>` (e.g., `/opt/ros/indigo`, or `$HOME/ros1_ws`), then the following
+commands will get you configured for building:
 
-        export
+        export CMAKE_PREFIX_PATH=<prefix>:$CMAKE_PREFIX_PATH
+        export CPATH=<prefix>/include:$CPATH
+        # The following line may require modification depending on your Python
+        # version and your system type (`dist-packages` vs. `site-packages).
+        export PYTHONPATH=<prefix>/lib/python2.7/dist-packages:$PYTHONPATH
 
-## Getting build flags for a ROS package
+## Getting C++ build flags for a ROS package
+To build your C++ application code against ROS packages, you need to assemble
+the right flags to pass to the compiler and linker.
 
-As with any set of 
+### CMake
+
+
 
 ### CMake
 
