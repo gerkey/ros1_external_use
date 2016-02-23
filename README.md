@@ -300,7 +300,9 @@ the generated output:
 install_prefix ?= /tmp/$(project)
 install: all
 	# As usual, the python install location might vary from platform to platform
-	mkdir -p $(install_prefix)/include/$(project) $(install_prefix)/lib/python2.7/site-packages/$(project)/msg $(install_prefix)/bin
+	mkdir -p $(install_prefix)/include/$(project) $(install_prefix)/lib/python2.7/site-packages/$(project)/msg $(install_prefix)/bin $(install_prefix)/share/$(project)/msg
+        # Put the .msg files in share/myproject/msg
+	cp -a $(msgs) $(install_prefix)/share/$(project)/msg
 	# Install our executable that uses custom messages
 	cp -a use_custom_msg $(install_prefix)/bin
 	# Install the C++ generated code
