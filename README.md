@@ -314,8 +314,34 @@ install: all
 ~~~
 
 ## Doing code generation for custom services
-**TODO: this should be very similar to code generation for messages.**
+Code generation for services is very similar to how it's done for messges. Here
+we'll just note the differences.
 
+### CMake
+Differences from message generation:
+
+* Instead of calling `add_message_files()`, you call `add_service_files()`.
+
+### make
+Differences from message generation:
+
+* The C++ generator will produce 3 files instead of one. Here's how to compute
+the names of those output files, given two input .srv files:
+
+        srvs = Bat.srv Baz.srv
+        srvs_cpp = $(foreach srv, $(srvs), $(project)/$(basename $(srv)).h $(project)/$(basename $(srv))Request.h $(project)/$(basename $(srv))Response.h)
+
+* The Python generator script is called `gensrv_py.py` instead of
+`genmsg_py.py`. Here are the update rules for calling that script (arguments are
+the same as before):
+
+        # General rule for doing Python code generation
+        $(project)/srv/_%.py: %.srv
+                $(gencpp_dir)/lib/genpy/gensrv_py.py $(pkg_msg_includes) -p $(project) -o $(project)/srv $<
+        # Extra rule for generating the __init__.py module file
+        $(srvs_py_init): $(srvs_py)
+                $(gencpp_dir)/lib/genpy/gensrv_py.py --initpy -p $(project) -o $(project)/srv
+        
 ## Doing code generation for custom actions
 **TODO: this should be similar to code generation for messages, but will be a
 two-step process.**
