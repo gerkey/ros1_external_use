@@ -20,7 +20,7 @@ cd ~/ros1_ws
 rosinstall_generator --deps --rosdistro indigo --tar --wet-only roslaunch roscpp std_msgs > ros1.repos
 # Pull the sources described in the file into a subdirectory `src`
 wstool init -j8 src ros1.repos
-# Use rosdep to further install any system dependencies required 
+# Use rosdep to further install any system dependencies required
 rosdep install --from-paths src --ignore-src --rosdistro indigo -y
 # Build the ROS packages, installing them locally into a subdirectory
 # `install_isolated`
