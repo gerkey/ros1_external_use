@@ -103,7 +103,7 @@ the following commands will get you configured for building:
 
 ## Environment configuration for running
 After building, you normally install your software somewhere before executing
-it. This isn't always necessary, but it usually eventualy is as you start do
+it. This isn't always necessary, but it usually eventually is as you start doing
 more complex things, like code generation. The requirements for run-time
 environment configuration are:
 
@@ -127,7 +127,7 @@ setup file):
         # We need ROS_PACKAGE_PATH to point to the installed ROS packages
         export ROS_PACKAGE_PATH=<prefix>/share
 
-1. Extend environment configuration for your installed software, assuming that it's
+1. Extend the environment configuration for your installed software, assuming that it's
 installed at `<install_prefix>`:
 
         export CMAKE_PREFIX_PATH=<install_prefix>:$CMAKE_PREFIX_PATH
