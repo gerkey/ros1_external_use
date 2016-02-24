@@ -141,7 +141,7 @@ the right flags to pass to the compiler and linker.
 
 ### CMake
 ROS packages follow the CMake configuration protocol, which means that you can
-just `find_package()` each one and then using the resulting variables that are
+just `find_package()` each one and then use the resulting variables that are
 defined. To build an executable that relies on package `foo`, you would refer to
 `foo_INCLUDE_DIRS` and `foo_LIBRARIES`:
 ~~~
