@@ -41,10 +41,10 @@ $(msgs_py_init): $(msgs_py)
 	$(gencpp_dir)/lib/genpy/genmsg_py.py --initpy -p $(project) -o $(project)/msg
 
 # Get flags for sensor_msgs, which we use in our action
-sensor_msgs_includes = `pkg-config --cflags-only-I sensor_msgs`
+sensor_msgs_includes = $(shell pkg-config --cflags-only-I sensor_msgs)
 # Get flags for actionlib
-actionlib_includes = `pkg-config --cflags-only-I actionlib`
-actionlib_libs = `pkg-config --libs actionlib`
+actionlib_includes = $(shell pkg-config --cflags-only-I actionlib)
+actionlib_libs = $(shell pkg-config --libs actionlib)
 actionlib_libs_nocolon = $(subst -l:,,$(actionlib_libs))
 
 # Build executables that use locally defined actions
