@@ -64,4 +64,4 @@ install: all
 
 # Clean up
 clean:
-	rm -f actionclient actionserver $(msgs) $(msgs_cpp) $(msgs_py) $(msgs_py_init)
+	rm -rf actionclient actionserver $(msgs) $(msgs_cpp) $(msgs_py) $(msgs_py_init) $(project)

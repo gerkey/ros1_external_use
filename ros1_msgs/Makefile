@@ -51,4 +51,4 @@ install: all
 
 # Clean up
 clean:
-	rm -f use_existing_msg use_custom_msg $(msgs_cpp) $(msgs_py) $(msgs_py_init)
+	rm -rf use_existing_msg use_custom_msg $(msgs_cpp) $(msgs_py) $(msgs_py_init) $(project)
