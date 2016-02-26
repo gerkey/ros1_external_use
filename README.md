@@ -383,7 +383,9 @@ language-specific targets:
         %Action.msg %ActionGoal.msg %ActionResult.msg %ActionFeedback.msg %Goal.msg %Result.msg %Feedback.msg: %.action
         	$(actionlib_msgs_dir)/lib/actionlib_msgs/genaction.py -o . $<
 
-The rest of the process is the same as for message generation.
+If you further want to use the `actionlib` libraries, which help you to build
+action clients and servers, then you'll also want to use `pkg-config` to get
+flags for `actionlib` and use them in building your executables.
 
 ## Installing for use by tools like roslaunch
 If you've ever used ROS, you know how useful tools like `roslaunch`, `rosmsg`,
