@@ -343,8 +343,47 @@ the same as before):
                 $(gencpp_dir)/lib/genpy/gensrv_py.py --initpy -p $(project) -o $(project)/srv
         
 ## Doing code generation for custom actions
-**TODO: this should be similar to code generation for messages, but will be a
-two-step process.**
+Code generation for actions is two steps:
+
+1. Run the action code generator to process an `.action` file into multiple `.msg` files.
+1. Run the usual message code generator on the resulting `.msg` files.
+
+
+### CMake
+Differences from message generation:
+
+* Always `find_package(actionlib_msgs)` because the auto-generated
+`.msg` files will refer to messages that are in that package.
+* Instead of calling `add_message_files()`, call `add_action_files()`.
+
+If you further want to use the `actionlib` libraries, which help you to build
+action clients and servers, then you'll also want to `find_package(actionlib)`
+and use the resulting variables in building your executables.
+
+### Make
+Differences from message generation:
+
+* You need to enumerate your `.action` files, then compute multiple `.msg`
+outputs that will be produced, e.g.:
+
+        actions = Foo.action Bar.action
+        msgs = $(foreach msg, $(actions), $(basename $(msg))Action.msg $(basename $(msg))ActionGoal.msg $(basename $(msg))ActionResult.msg $(basename $(msg))ActionFeedback.msg $(basename $(msg))Goal.msg $(basename $(msg))Result.msg $(basename $(msg))Feedback.msg)
+
+* With the `.msg` targets known, do the usual computation of their
+language-specific targets:
+
+        msgs_cpp = $(foreach msg, $(msgs), $(project)/$(basename $(msg)).h)
+        msgs_py = $(foreach msg, $(msgs), $(project)/msg/_$(basename $(msg)).py)
+        msgs_py_init = $(project)/msg/__init__.py
+
+* Find and use the action code generator:
+
+        actionlib_msgs_dir = $(shell pkg-config --variable=prefix actionlib_msgs)
+        # General rule for doing .action -> .msg generation
+        %Action.msg %ActionGoal.msg %ActionResult.msg %ActionFeedback.msg %Goal.msg %Result.msg %Feedback.msg: %.action
+        	$(actionlib_msgs_dir)/lib/actionlib_msgs/genaction.py -o . $<
+
+The rest of the process is the same as for message generation.
 
 ## Installing for use by tools like roslaunch
 If you've ever used ROS, you know how useful tools like `roslaunch`, `rosmsg`,
