@@ -23,11 +23,12 @@ any problems that you encounter. Also, if there are use cases that you'd like to
 On Ubuntu, we provide binary packages for ROS software. To configure your
 system to use them, you need to add our repository and key to your system,
 like so (assuming that you're using ROS Indigo on Ubuntu trusty):
-~~~
+
+```bash
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 sudo apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-key 0xB01FA116
 sudo apt-get update
-~~~
+```
 
 Now you're ready to `sudo apt-get install` ROS packages as indicated in the
 detailed instructions in each example in this repository.
@@ -36,7 +37,8 @@ detailed instructions in each example in this repository.
 We need to install a few system dependencies (on Ubuntu this step is done
 automatically by the dependencies encoded in the binary packages). We get
 those dependencies from a combination of brew and pip:
-~~~
+
+```bash
 # <Install brew and configure your environment to include /usr/local (http://brew.sh)>
 # Update brew and add a tap that will provide some ROS-specific dependencies
 brew update
@@ -51,13 +53,13 @@ sudo -H pip install -U wstool rosinstall rosinstall_generator rospkg catkin-pkg 
 # package-specific system dependencies are satisfied
 sudo rosdep init
 rosdep update
-~~~
+```
 
 # Get the code (all platforms)
 Whatever platform you're on, you'll need to clone this repo:
-~~~
+```bash
 git clone https://github.com/gerkey/ros1_external_use
-~~~
+```
 
 # Preliminary documentation
 Here we begin to document in a definitive manner the tools and techniques that
@@ -82,24 +84,28 @@ To get your environment configured, you have two choices:
 easiest way to get the environment configuration. E.g., if you are using ROS
 Indigo from the OSRF packages, then you would do:
 
-        . /opt/ros/indigo/setup.sh
+    ```bash
+    . /opt/ros/indigo/setup.sh
+    ```
 
 1. Set the required variables manually. If your packages are installed to
 `<prefix>` (e.g., `/opt/ros/indigo`, or `$HOME/ros1_ws/install_isolated`), then
 the following commands will get you configured for building:
 
-        # To find_package() things from CMake, you need your ROS installation on
-        # your CMAKE_PREFIX_PATH.
-        export CMAKE_PREFIX_PATH=<prefix>:$CMAKE_PREFIX_PATH
-        # To pkg-config things from make, you need your ROS installation on
-        # your PKG_CONFIG_PATH.
-        export PKG_CONFIG_PATH=<prefix>/lib/pkgconfig:$PKG_CONFIG_PATH
-        # To find headers installed to <prefix>/include, you need to modify
-        # CPATH.
-        export CPATH=<prefix>/include:$CPATH
-        # The following line may require modification depending on your Python
-        # version and your system type (`dist-packages` vs. `site-packages).
-        export PYTHONPATH=<prefix>/lib/python2.7/dist-packages:$PYTHONPATH
+    ```bash
+    # To find_package() things from CMake, you need your ROS installation on
+    # your CMAKE_PREFIX_PATH.
+    export CMAKE_PREFIX_PATH=<prefix>:$CMAKE_PREFIX_PATH
+    # To pkg-config things from make, you need your ROS installation on
+    # your PKG_CONFIG_PATH.
+    export PKG_CONFIG_PATH=<prefix>/lib/pkgconfig:$PKG_CONFIG_PATH
+    # To find headers installed to <prefix>/include, you need to modify
+    # CPATH.
+    export CPATH=<prefix>/include:$CPATH
+    # The following line may require modification depending on your Python
+    # version and your system type (`dist-packages` vs. `site-packages).
+    export PYTHONPATH=<prefix>/lib/python2.7/dist-packages:$PYTHONPATH
+    ```
 
 ## Environment configuration for running
 After building, you normally install your software somewhere before executing
@@ -115,25 +121,29 @@ extend `PATH` to find top-level ROS executables, set the `ROS_MASTER_URI`, and
 set the `ROS_PACKAGE_PATH` (again, this would be handled for you by the ROS
 setup file):
 
-        # Add the shared library location.
-        #   Linux version: 
-        export LD_LIBRARY_PATH=<prefix>/lib:$LD_LIBRARY_PATH
-        #   OSX version:
-        #export DYLD_LIBRARY_PATH=<prefix>/lib:$DYLD_LIBRARY_PATH
-        # Extend PATH to include things like roslaunch
-        export PATH=<prefix>/bin:$PATH
-        # We need ROS_MASTER_URI to find the roscore
-        export ROS_MASTER_URI=http://localhost:11311
-        # We need ROS_PACKAGE_PATH to point to the installed ROS packages
-        export ROS_PACKAGE_PATH=<prefix>/share
+    ```bash
+    # Add the shared library location.
+    #   Linux version: 
+    export LD_LIBRARY_PATH=<prefix>/lib:$LD_LIBRARY_PATH
+    #   OSX version:
+    #export DYLD_LIBRARY_PATH=<prefix>/lib:$DYLD_LIBRARY_PATH
+    # Extend PATH to include things like roslaunch
+    export PATH=<prefix>/bin:$PATH
+    # We need ROS_MASTER_URI to find the roscore
+    export ROS_MASTER_URI=http://localhost:11311
+    # We need ROS_PACKAGE_PATH to point to the installed ROS packages
+    export ROS_PACKAGE_PATH=<prefix>/share
+    ```
 
 1. Extend the environment configuration for your installed software, assuming that it's
 installed at `<install_prefix>`:
 
-        export CMAKE_PREFIX_PATH=<install_prefix>:$CMAKE_PREFIX_PATH
-        # Modify this line as needed for your installation choices:
-        export PYTHONPATH=<install_prefix>/lib/python2.7/dist-packages:$PYTHONPATH
-        export ROS_PACKAGE_PATH=<install_prefix>/share:$ROS_PACKAGE_PATH
+    ```bash
+    export CMAKE_PREFIX_PATH=<install_prefix>:$CMAKE_PREFIX_PATH
+    # Modify this line as needed for your installation choices:
+    export PYTHONPATH=<install_prefix>/lib/python2.7/dist-packages:$PYTHONPATH
+    export ROS_PACKAGE_PATH=<install_prefix>/share:$ROS_PACKAGE_PATH
+    ```
 
 ## Building C++ programs
 To build your C++ application code against ROS packages, you need to assemble
@@ -144,12 +154,14 @@ ROS packages follow the CMake configuration protocol, which means that you can
 just `find_package()` each one and then use the resulting variables that are
 defined. To build an executable that relies on package `foo`, you would refer to
 `foo_INCLUDE_DIRS` and `foo_LIBRARIES`:
-~~~
+
+```cmake
 find_package(foo REQUIRED)
 include_directories(${foo_INCLUDE_DIRS})
 add_executable(myprogram myprogram.cpp)
 target_link_libraries(myprogram ${foo_LIBRARIES})
-~~~
+```
+
 Notes:
 * You don't have to call `link_directories(${foo_LIBRARY_DIRS})` because ROS
 packages follow the recommended practice of returning absolute paths in
@@ -162,14 +174,16 @@ assets.
 ROS packages provide `pkg-config` files that let you get build flags from make
 (or from a shell script or the command line, or wherever). The equivalent of the
 CMake example using package `foo` looks like this in make:
-~~~
+
+```make
 foo_cflags = $(shell pkg-config --cflags foo)
 foo_libs = $(shell pkg-config --libs foo)
 # Work around a known issue with new linkers that don't accept -l:/path/to/lib
 foo_libs_nocolon = $(subst -l:,,$(foo_libs))
 myprogram: myprogram.cpp
 	$(CXX) -Wall -o $@ $(foo_cflags) $< $(foo_libs_nocolon)
-~~~
+```
+
 Notes:
 * You can get just the include dirs by calling `pkg-config --cflags-only-I foo`.
 * You might also call `pkg-config --variable=prefix foo` if you need to get the
@@ -201,7 +215,8 @@ Calling message code generators from CMake is simplified because the `genmsg`
 package provides macros to help. Let's say that you have two custom messages,
 `Foo.msg` and `Bar.msg`, and that they in turn use messages from two installed
 ROS packages `foo_msgs` and `bar_msgs`. Then you would do message generation like so:
-~~~
+
+```cmake
 # Give the project a name (good practice in general and required by the code
 # generators to decide how to namespace and where to produce their outputs).
 project(myproject)
@@ -218,16 +233,19 @@ find_package(bar_msgs REQUIRED)
 add_message_files(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} FILES Foo.msg Bar.msg)
 # Do code generation, specifying which other message packages we depend on.
 generate_messages(DEPENDENCIES foo_msgs bar_msgs)
-~~~
+```
+
 That's code generation all set up. Now let's build a program that uses the
 output:
-~~~
+
+```cmake
 # Build a program that uses the custom messages
 add_executable(use_custom_msg use_custom_msg.cpp)
 # Ensure that code generation happens before building use_custom_msg by
 # depending on a special target created by generate_messages().
 add_dependencies(use_custom_msg ${PROJECT_NAME}_generate_messages)
-~~~
+```
+
 Notes:
 * The C++ code for `Foo.msg` will be in `devel/include/myproject/Foo.h` and will define a
 message class `myproject::Foo`. Your include directories are automatically
@@ -245,7 +263,8 @@ Compared to CMake, it takes a bit more effort to call the message code
 generators from make, but it's definitely doable. Taking the example from above
 (`Foo.msg` and `Bar.msg` depend on messages from `foo_msgs` and `bar_msgs`),
 here's what you would do:
-~~~
+
+```make
 # Give the project a name (good practice in general and required by the code
 # generators to decide how to namespace and where to produce their outputs).
 project = myproject
@@ -285,18 +304,22 @@ $(project)/msg/_%.py: %.msg
 # Extra rule for generating the __init__.py module file
 $(msgs_py_init): $(msgs_py)
 	$(gencpp_dir)/lib/genpy/genmsg_py.py --initpy -p $(project) -o $(project)/msg
-~~~
+```
+
 That's code generation all set up. Now let's build a program that uses the
 output:
-~~~
+
+```make
 # Build an executable that uses locally defined messages. Note that it depends
 # on the output from the C++ generator.
 use_custom_msg: use_custom_msg.cpp $(msgs_cpp)
 	$(CXX) -Wall -o $@ $(foo_msgs_includes) $(bar_msgs_includes) -I. $<
-~~~
+```
+
 Further, let's show how to install our custom messages, both the raw input and
 the generated output:
-~~~
+
+```make
 install_prefix ?= /tmp/$(project)
 install: all
 	# As usual, the python install location might vary from platform to platform
@@ -311,7 +334,7 @@ install: all
 	cp -a $(msgs_py) $(msgs_py_init) $(install_prefix)/lib/python2.7/site-packages/$(project)/msg
 	# Drop an empty `__init__.py` file to make `myproject` into a Python module
 	touch $(install_prefix)/lib/python2.7/site-packages/$(project)/__init__.py
-~~~
+```
 
 ## Doing code generation for custom services
 Code generation for services is very similar to how it's done for messges. Here
@@ -328,20 +351,24 @@ Differences from message generation:
 * The C++ generator will produce 3 files instead of one. Here's how to compute
 the names of those output files, given two input .srv files:
 
-        srvs = Bat.srv Baz.srv
-        srvs_cpp = $(foreach srv, $(srvs), $(project)/$(basename $(srv)).h $(project)/$(basename $(srv))Request.h $(project)/$(basename $(srv))Response.h)
+    ```make
+    srvs = Bat.srv Baz.srv
+    srvs_cpp = $(foreach srv, $(srvs), $(project)/$(basename $(srv)).h $(project)/$(basename $(srv))Request.h $(project)/$(basename $(srv))Response.h)
+    ```
 
 * The Python generator script is called `gensrv_py.py` instead of
 `genmsg_py.py`. Here are the update rules for calling that script (arguments are
 the same as before):
 
-        # General rule for doing Python code generation
-        $(project)/srv/_%.py: %.srv
-                $(gencpp_dir)/lib/genpy/gensrv_py.py $(pkg_msg_includes) -p $(project) -o $(project)/srv $<
-        # Extra rule for generating the __init__.py module file
-        $(srvs_py_init): $(srvs_py)
-                $(gencpp_dir)/lib/genpy/gensrv_py.py --initpy -p $(project) -o $(project)/srv
-        
+    ```make
+    # General rule for doing Python code generation
+    $(project)/srv/_%.py: %.srv
+            $(gencpp_dir)/lib/genpy/gensrv_py.py $(pkg_msg_includes) -p $(project) -o $(project)/srv $<
+    # Extra rule for generating the __init__.py module file
+    $(srvs_py_init): $(srvs_py)
+            $(gencpp_dir)/lib/genpy/gensrv_py.py --initpy -p $(project) -o $(project)/srv
+    ```
+
 ## Doing code generation for custom actions
 Code generation for actions is two steps:
 
@@ -366,22 +393,28 @@ Differences from message generation:
 * You need to enumerate your `.action` files, then compute multiple `.msg`
 outputs that will be produced, e.g.:
 
-        actions = Foo.action Bar.action
-        msgs = $(foreach msg, $(actions), $(basename $(msg))Action.msg $(basename $(msg))ActionGoal.msg $(basename $(msg))ActionResult.msg $(basename $(msg))ActionFeedback.msg $(basename $(msg))Goal.msg $(basename $(msg))Result.msg $(basename $(msg))Feedback.msg)
+    ```make
+    actions = Foo.action Bar.action
+    msgs = $(foreach msg, $(actions), $(basename $(msg))Action.msg $(basename $(msg))ActionGoal.msg $(basename $(msg))ActionResult.msg $(basename $(msg))ActionFeedback.msg $(basename $(msg))Goal.msg $(basename $(msg))Result.msg $(basename $(msg))Feedback.msg)
+    ```
 
 * With the `.msg` targets known, do the usual computation of their
 language-specific targets:
 
-        msgs_cpp = $(foreach msg, $(msgs), $(project)/$(basename $(msg)).h)
-        msgs_py = $(foreach msg, $(msgs), $(project)/msg/_$(basename $(msg)).py)
-        msgs_py_init = $(project)/msg/__init__.py
+    ```make
+    msgs_cpp = $(foreach msg, $(msgs), $(project)/$(basename $(msg)).h)
+    msgs_py = $(foreach msg, $(msgs), $(project)/msg/_$(basename $(msg)).py)
+    msgs_py_init = $(project)/msg/__init__.py
+    ```
 
 * Find and use the action code generator:
 
-        actionlib_msgs_dir = $(shell pkg-config --variable=prefix actionlib_msgs)
-        # General rule for doing .action -> .msg generation
-        %Action.msg %ActionGoal.msg %ActionResult.msg %ActionFeedback.msg %Goal.msg %Result.msg %Feedback.msg: %.action
-        	$(actionlib_msgs_dir)/lib/actionlib_msgs/genaction.py -o . $<
+    ```make
+    actionlib_msgs_dir = $(shell pkg-config --variable=prefix actionlib_msgs)
+    # General rule for doing .action -> .msg generation
+    %Action.msg %ActionGoal.msg %ActionResult.msg %ActionFeedback.msg %Goal.msg %Result.msg %Feedback.msg: %.action
+    	$(actionlib_msgs_dir)/lib/actionlib_msgs/genaction.py -o . $<
+    ```
 
 If you further want to use the `actionlib` libraries, which help you to build
 action clients and servers, then you'll also want to use `pkg-config` to get
@@ -397,12 +430,14 @@ during installation.
 
 For example, let's say that you build two nodes, `talker`, and `listener`, and
 you have a launch file, `talker_listener.launch` that refers to them like so:
-~~~
+
+```xml
 <launch>
   <node pkg="myproject" type="talker" name="talker" output="screen"/>
   <node pkg="myproject" type="listener" name="listener" output="screen"/>
 </launch>
-~~~
+```
+
 What's required to run that launch file, so that `roslaunch` can find your
 programs? We need to do a few things:
 
@@ -415,7 +450,8 @@ is included in the `CMAKE_PREFIX_PATH`, then this marker file will cause
 
 ### make
 Here's what the install rule could look like:
-~~~
+
+```make
 # Assume that you have earlier rules that will build the talker and listener
 # executables
 install: talker listener
@@ -434,12 +470,17 @@ install: talker listener
 	# rosrun/roslaunch to look in <prefix>/lib/project for executables
 	# for each <prefix> in CMAKE_PREFIX_PATH
 	touch $(install_prefix)/.catkin
-~~~
+```
+
 Then, after you `make install`, if you have the run-time environment
 configuration set up properly, you should be able to do:
 
-    roslaunch myproject talker_listener.launch
+```bash
+roslaunch myproject talker_listener.launch
+```
 
 Or, equivalently:
 
-    roslaunch <install_prefix>/share/myproject/launch/talker_listener.launch
+```bash
+roslaunch <install_prefix>/share/myproject/launch/talker_listener.launch
+```
