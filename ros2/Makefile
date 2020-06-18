@@ -10,7 +10,7 @@ deps = rclcpp std_msgs
 cflags = $(foreach dep, $(deps), $(shell cmake --find-package -DNAME=$(dep) -DCOMPILER_ID=GNU -DLANGUAGE=C -DMODE=COMPILE))
 lflags = $(foreach dep, $(deps), $(shell cmake --find-package -DNAME=$(dep) -DCOMPILER_ID=GNU -DLANGUAGE=C -DMODE=LINK))
 
-all: pub
+all: talker listener
 
 %: %.cpp
 	$(CXX) -Wall -o $@ $(cflags) $< $(lflags) -lpthread
